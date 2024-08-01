@@ -1,6 +1,5 @@
 const socketIo = require('socket.io');
 const User = require('../models/User');
- 
 
 function initializeSocket(server) {
   const io = socketIo(server, {
