@@ -4,28 +4,14 @@
         {
             "src": "./index.js",
             "use": "@vercel/node"
-        },
-        {
-            "src": "avatar/*",
-            "use": "@vercel/static"
-        },
-        {
-            "src": "videos/*",
-            "use": "@vercel/static"
         }
+      
     ],
     "routes": [
         {
             "src": "/(.*)",
             "dest": "/"
-        },
-        {
-            "src": "/data/videos/(.+)",
-            "dest": "videos/$1"
-        },
-        {
-            "src": "/users/avatar/(.+)",
-            "dest": "avatar/$1"
         }
+       
     ]
 }
