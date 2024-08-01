@@ -18,7 +18,7 @@ app.use(cookieParser())
 const errorHandler = require('./middlewares/errorMiddleware.js');
 const { port } = require('./utils/port.js');
 var corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: 'https://soft-uni-project-sheesh-tv.vercel.app',
   optionsSuccessStatus: 200,
   credentials: true
 }
@@ -52,7 +52,7 @@ const server = http.createServer(app)
 
 const io = socketIo(server, {
   cors: {
-    origin: 'http://localhost:5173',
+    origin: 'https://soft-uni-project-sheesh-tv.vercel.app',
     methods: ['GET', 'POST']
   }
 })
