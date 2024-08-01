@@ -35,7 +35,7 @@ app.use(errorHandler);
 
 
 app.get('/', (req, res) => {
-  res.send(port);
+  res.send('HELLO SERVER');
 
 });
 
