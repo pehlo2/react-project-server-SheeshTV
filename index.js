@@ -36,7 +36,7 @@ app.use(errorHandler);
 
 
 app.get('/', (req, res) => {
-  res.json(process?.env?.MONGODB_URI);
+  res.json('Hello Server');
 
 
 });
