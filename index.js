@@ -38,14 +38,19 @@ app.use(errorHandler);
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: origin,
-    methods: ['GET', 'POST']
-  }
+    origin: process.env.ORIGIN || 'http://localhost:5173',
+    methods: ['GET', 'POST'],
+    credentials: true
+  },
+  transports: ['websocket', 'polling']
 });
+
 
 const User = require('./models/User.js');
 
 io.on('connection', (socket) => {
+  console.log('New client connected');
+  
   socket.on('register', async (userId) => {
     const user = await User.findById(userId);
     if (user) {
