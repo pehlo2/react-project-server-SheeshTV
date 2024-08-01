@@ -36,7 +36,7 @@ app.use(errorHandler);
 
 
 app.get('/', (req, res) => {
-  res.send('Hello Server');
+  res.json(process.env);
 
 
 });
