@@ -6,7 +6,7 @@
             "use": "@vercel/node"
         },
         {
-            "src": "./socket.js",
+            "src": "./utils/socket.js",
             "use": "@vercel/node"
         }
       
