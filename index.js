@@ -4,9 +4,10 @@ const path = require('path');
 const routes = require('./router.js');
 const mongoose = require('mongoose')
 const { auth } = require('./middlewares/authMiddleware.js');
+const dotenv = require('dotenv').config()
+console.log(dotenv);
 
-
-mongoose.connect('mongodb://127.0.0.1:27017/SheeshTV').then(() => console.log('DB connected')).catch(err => console.log(err));
+mongoose.connect('mongodb+srv://pehlo6383:mlBN2RVkpA9GoXND@cluster0.kgrspi7.mongodb.net/').then(() => console.log('DB connected')).catch(err => console.log(err));
 
 
 const cors = require('cors');
@@ -65,6 +66,7 @@ app.use((req, res, next) => {
 
 
 const socketHandler = require('./utils/socket.js');
+const { log } = require('console');
 socketHandler(io);
 
 
