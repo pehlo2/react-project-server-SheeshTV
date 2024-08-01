@@ -35,7 +35,7 @@ app.use(errorHandler);
 
 
 app.get('/', (req, res) => {
-  res.send('Hello Server');
+  res.send(port);
 
 });
 
@@ -60,6 +60,9 @@ app.use((req, res, next) => {
   req.io = io;
   next();
 });
+
+
+
 
 const socketHandler = require('./utils/socket.js');
 socketHandler(io);
