@@ -18,7 +18,7 @@ app.use(cookieParser())
 const errorHandler = require('./middlewares/errorMiddleware.js');
 const { port ,origin } = require('./utils/port.js');
 var corsOptions = {
-  origin: 'https://soft-uni-project-sheesh-tv.vercel.app',
+  origin: origin,
   optionsSuccessStatus: 200,
   credentials: true
 }
@@ -42,21 +42,6 @@ app.get('/', (req, res) => {
 });
 
 
-
-//////// socket.io///
-const http = require('http')
-const socketIo = require('socket.io');
-const User = require('./models/User.js');
-
-const server = http.createServer(app)
-
-const io = socketIo(server, {
-  cors: {
-    origin: origin,
-    methods: ['GET', 'POST']
-  }
-})
-
 ///middleware///
 app.use((req, res, next) => {
   req.io = io;
@@ -66,12 +51,8 @@ app.use((req, res, next) => {
 
 
 
-const socketHandler = require('./utils/socket.js');
-socketHandler(io);
-
-
 app.use(routes);
 app.listen(port, () => console.log(`Server Start port ${port}`));
-io.listen(5000, () => console.log(`Server Start port ${5000}`));
+
 
 
