@@ -1,7 +1,7 @@
 // socketHandler.js
 const { origin,socketPort } = require('./port.js');
 const User = require('../models/User');
-const express = requir3e('express');
+const express = require('express');
 const app = express();
 const mongoose = require('mongoose')
 
