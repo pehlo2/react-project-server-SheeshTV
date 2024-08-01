@@ -7,7 +7,7 @@ const { auth } = require('./middlewares/authMiddleware.js');
 const dotenv = require('dotenv').config()
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/SheeshTV').then(() => console.log('DB connected')).catch(err => console.log(err));
+mongoose.connect(process?.env?.MONGODB_URI ?? 'mongodb://127.0.0.1:27017/SheeshTV').then(() => console.log('DB connected')).catch(err => console.log(err));
 
 
 const cors = require('cors');
@@ -36,8 +36,8 @@ app.use(errorHandler);
 
 
 app.get('/', (req, res) => {
-  res.json(process.env);
-  
+  res.json(process?.env?.MONGODB_URI);
+
 
 });
 
