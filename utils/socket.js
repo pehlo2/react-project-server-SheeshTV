@@ -1,43 +1,44 @@
-// // socketHandler.js
-// const { origin,socketPort } = require('./port.js');
-// const User = require('../models/User');
-// const express = require('express');
-// const app = express();
-// const mongoose = require('mongoose')
+const socketIo = require('socket.io');
+const User = require('../models/User');
+ 
 
-// // mongoose.connect(process?.env?.MONGODB_URI ?? 'mongodb://127.0.0.1:27017/SheeshTV').then(() => console.log('DB connected')).catch(err => console.log(err));
+function initializeSocket(server) {
+  const io = socketIo(server, {
+    cors: {
+      origin: process.env.ORIGIN || 'http://localhost:5173',
+      methods: ['GET', 'POST'],
+      credentials: true
+    },
+    transports: ['websocket', 'polling']
+  });
 
-// const http = require('http')
-// const socketIo = require('socket.io');
+  io.on('connection', (socket) => {
+    console.log('New client connected');
 
+    socket.on('register', async (userId) => {
+      console.log(`User registered: ${userId}`);
+      const user = await User.findById(userId);
+      if (user) {
+        user.socketId = socket.id;
+        await user.save();
+      }
+    });
 
-// const server = http.createServer(app)
+    socket.on('disconnect', async () => {
+      console.log('Client disconnected');
+      const user = await User.findOne({ socketId: socket.id });
+      if (user) {
+        user.socketId = null;
+        await user.save();
+      }
+    });
 
-// const io = socketIo(server, {
-//   cors: {
-//     origin: origin,
-//     methods: ['GET', 'POST']
-//   }
-// })
+    socket.on('error', (err) => {
+      console.error('Socket error:', err);
+    });
+  });
 
+  return io;
+}
 
-
-// io.on('connection', (socket) => {
-//   socket.on('register', async (userId) => {
-//     const user = await User.findById(userId);
-//     if (user) {
-//       user.socketId = socket.id;
-//       await user.save();
-//     }
-//   });
-
-//   socket.on('disconnect', async () => {
-//     const user = await User.findOne({ socketId: socket.id });
-//     if (user) {
-//       user.socketId = null;
-//       await user.save();
-//     }
-//   });
-// });
-
-// io.listen(socketPort, () => console.log(`Server Start port ${socketPort}`));
+module.exports = initializeSocket;
