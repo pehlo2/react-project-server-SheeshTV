@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser())
 const errorHandler = require('./middlewares/errorMiddleware.js');
-const { port } = require('./utils/port.js');
+const { port ,origin } = require('./utils/port.js');
 var corsOptions = {
   origin: 'https://soft-uni-project-sheesh-tv.vercel.app',
   optionsSuccessStatus: 200,
@@ -52,7 +52,7 @@ const server = http.createServer(app)
 
 const io = socketIo(server, {
   cors: {
-    origin: 'https://soft-uni-project-sheesh-tv.vercel.app',
+    origin: origin,
     methods: ['GET', 'POST']
   }
 })
@@ -67,7 +67,6 @@ app.use((req, res, next) => {
 
 
 const socketHandler = require('./utils/socket.js');
-const { log } = require('console');
 socketHandler(io);
 
 
