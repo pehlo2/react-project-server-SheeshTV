@@ -1,0 +1,3 @@
+Password - GxAUCEGT6fWQIpLx
+
+mongodb+srv://pehlo6383:<password>@sheeshtvserver.fvu548r.mongodb.net/
