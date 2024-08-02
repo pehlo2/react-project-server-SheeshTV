@@ -12,7 +12,6 @@ dist
 dist-ssr
 *.local
 bin
-videos
 avatar
 # Editor directories and files
 .vscode/*
