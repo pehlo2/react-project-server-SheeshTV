@@ -38,7 +38,6 @@ app.use(errorHandler);
 
 const server = http.createServer(app);
 
-// Initialize socket server on the same server instance
 const io = initializeSocket(server);
 
 app.get('/', (req, res) => {
