@@ -41,7 +41,7 @@ const server = http.createServer(app);
 const io = initializeSocket(server);
 
 app.get('/', (req, res) => {
-  res.json(process.env);
+  res.send('Hello Server')
 });
 
 app.use((req, res, next) => {
