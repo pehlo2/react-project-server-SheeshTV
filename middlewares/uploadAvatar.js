@@ -10,6 +10,10 @@ const bucketRegion = process.env.BUCKET_REGION
 const accessKeyId = process.env.ACCESS_KEY
 const secretAccessKey = process.env.SECRET_ACCESS_KEY
 
+console.log('Bucket Name:', bucketName);
+console.log('Bucket Region:', bucketRegion);
+console.log('Access Key:', accessKeyId);
+console.log('Secret Access Key:', secretAccessKey);
 
 aws.config.update({
     accessKeyId: accessKeyId,
