@@ -5,11 +5,17 @@ const aws = require('aws-sdk');
 const path = require('path');
 require('dotenv').config();
 
-// AWS S3 configuration
+const bucketName =process.env.BUCKET_NAME
+const bucketRegion=process.env.BUCKET_REGION
+const accessKeyId =process.env.ACCESS_KEY
+const secretAccessKey =process.env.SECRET_ACCESS_KEY
+
+
+
 aws.config.update({
-    accessKeyId: process.env.ACCESS_KEY,
-    secretAccessKey: process.env.SECRET_ACCESS_KEY,
-    region: process.env.BUCKET_REGION,
+    accessKeyId: accessKeyId,
+    secretAccessKey: secretAccessKey,
+    region:bucketRegion,
 });
 
 const s3 = new aws.S3();
@@ -17,7 +23,7 @@ const s3 = new aws.S3();
 
 const storage = multerS3({
     s3: s3,
-    bucket: process.env.BUCKET_NAME,
+    bucket: bucketName,
     acl: 'public-read', 
     key: function (req, file, cb) {
         cb(null, `videos/${Date.now()}_${path.basename(file.originalname)}`);
