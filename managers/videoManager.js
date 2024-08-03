@@ -6,8 +6,7 @@ exports.getAll = (currentUserId, gameChoice, searchQuery,page,limit) => {
 
 
 
-  console.log(searchQuery);
-  
+
   let filter = {
     $or: [
       { owner: { $ne: currentUserId } },

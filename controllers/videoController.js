@@ -6,28 +6,48 @@ const upload = require('../middlewares/upload.js')
 const extractImage = require('../utils/imageExtractor.js')
 const commentManager = require('../managers/commentsManager.js');
 const { BASE_URL_FOR_AVATARS, BASE_URL_FOR_VIDEOS } = require('../utils/port.js');
-const { changeOwnerAvatarUrl } = require('../utils/changeOwnerAvatarUrl.js');
+
 const notificationManager = require('../managers/notificationsManager.js');
+const AWS = require('aws-sdk');
 
+const s3 = new AWS.S3();
+const bucketName = process.env.BUCKET_NAME
+const bucketRegion = process.env.BUCKET_REGION
+const accessKeyId = process.env.ACCESS_KEY
+const secretAccessKey = process.env.SECRET_ACCESS_KEY
 
-const fs = require('fs').promises
+AWS.config.update({
+  credentials: {
+    accessKeyId: accessKeyId,
+    secretAccessKey: secretAccessKey,
+  },
+
+  region: bucketRegion,
+});
 
 router.post('/upload', upload.single('video'), async (req, res) => {
   try {
 
+    const videoPath = req.file.location;
+    const videoKey = req.file.key;
+   
 
-    let lastPeriodIndex = req.file.path.lastIndexOf('.')
-    let imagePath = req.file.path.substring(0, lastPeriodIndex + 1) + 'jpg'
-    extractImage(req.file.path, imagePath)
+
+    const imagePath = videoKey.replace(/\.[^/.]+$/, ".jpg");
+    const thumbnailUrl = await extractImage(videoPath, imagePath);
     const video = new Video({
       title: req.body.title,
       owner: req.body.userId,
       description: req.body.description,
       gameChoice: req.body.gameChoice,
       videoUrl: req.file.location,
-      thumbnail: imagePath
+      thumbnail: thumbnailUrl
     });
+
+
+
     const savedVideo = await video.save();
+    console.log(savedVideo);
     res.status(200).json(savedVideo);
   } catch (err) {
     console.log(err.message);
@@ -53,8 +73,8 @@ router.get('/', async (req, res) => {
   try {
     videos = await videoManager.getAll(currentUserId, gameChoice, searchQuery, page, limit).populate('owner')
 
-    const videosResult = changeOwnerAvatarUrl(videos)
-    res.json(videosResult)
+   
+    res.json(videos)
 
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -84,9 +104,9 @@ router.get('/user-videos', async (req, res) => {
 
 
     const videos = await videoManager.getAllByOwnerId(profileId, limit, page).populate('owner')
-    let videoResults = changeOwnerAvatarUrl(videos)
+  
 
-    res.json(videoResults)
+    res.json(videos)
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -122,9 +142,8 @@ router.get('/:videoId', async (req, res) => {
     }
     video.viewCount += 1;
     await video.save();
-    video.owner.avatar = `${BASE_URL_FOR_AVATARS}${video.owner.avatar}`
-    video.videoUrl = `${BASE_URL_FOR_VIDEOS}${video.videoUrl.split('/').pop()}`
-    console.log(video);
+
+    console.log('video');
     res.json(video)
 
   } catch (err) {
@@ -142,9 +161,7 @@ router.post('/:videoId/like', async (req, res) => {
   const videoId = req.params.videoId
   const authorName = req.user?.username
   const userId = req.user?._id
-  console.log(videoId,
-    authorName,
-    userId);
+  console.log(req.user);
   try {
 
     const video = await videoManager.getOne(videoId).populate('owner');
@@ -220,9 +237,18 @@ router.delete('/:videoId/delete', async (req, res) => {
       return res.status(404).json({ message: 'Video not found' });
     }
 
-    await fs.unlink(video.videoUrl)
-    await fs.unlink(video.thumbnail)
 
+    const deleteS3Objects = async (filePath) => {
+    
+      const key = `videos/${filePath.split('/').pop()}`;
+
+      return s3.deleteObject({
+        Bucket: bucketName,
+        Key: key
+      }).promise();
+    };
+    await deleteS3Objects(video.videoUrl);
+    await deleteS3Objects(video.thumbnail);
     res.json({ message: 'Video deleted successfully' })
 
   } catch (err) {

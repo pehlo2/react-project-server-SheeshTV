@@ -77,8 +77,8 @@ router.get('/', async (req, res) => {
 
     const videoId = query.substring(9, 33)
     const comments = await commentManager.AllVideoComments(videoId).populate('author')
-    const commentsResult = changeOwnerAvatarUrl(comments)
-    return res.status(201).json(commentsResult)
+    
+    return res.status(201).json(comments)
 
   } catch (err) {
     res.status(500).json({ err: err.message })
@@ -116,6 +116,9 @@ router.put('/:commentId', async (req, res) => {
 
 
 router.delete('/:commentId', async (req, res) => {
+
+  console.log(req.params.commentId);
+  
   try {
     await commentManager.deleteComment(req.params.commentId)
 

@@ -1,31 +1,74 @@
+const AWS = require('aws-sdk');
+const ffmpeg = require('fluent-ffmpeg');
+const path = require('path');
+const fs = require('fs');
 
-const ffmpeg = require('ffmpeg');
+const s3 = new AWS.S3();
+const bucketName = 'sheeshtv';
 
-const extractImage =(videoPath, imagePath) =>{
-    try {
-      var process = new ffmpeg(videoPath);
-      process.then(function (video) {
-        video.addCommand('-ss', `${Math.ceil(video.metadata.duration.seconds)}`)
-        video.addCommand('-vframes', '1')
-        video.save(imagePath, function (error, file) {
-  
-          if (error) {
-            console.log(error);
-          }
-  
-  
-          if (!error)
-            console.log(video.metadata.duration);
-  
-          console.log('Video file: ' + file);
+const extractImage = (videoUrl, imagePath) => {
+    return new Promise((resolve, reject) => {
+        const tempFilePath = path.join(__dirname, 'temp-video.mp4');
+        const tempImagePath = path.join(__dirname, 'temp-image.jpg');
+
+     
+        const videoKey = new URL(videoUrl).pathname.substring(1); 
+     
+
+    
+        const videoStream = fs.createWriteStream(tempFilePath);
+        s3.getObject({ Bucket: bucketName, Key: videoKey })
+            .createReadStream()
+            .on('error', (err) => {
+                console.error('Error downloading video from S3:', err); 
+                reject(err);
+            })
+            .pipe(videoStream);
+
+        videoStream.on('finish', () => {
+         
+            ffmpeg(tempFilePath)
+                .screenshots({
+                    count: 1,
+                    folder: __dirname,
+                    filename: 'temp-image.jpg',
+                })
+                .on('end', () => {
+                   
+                    const fileContent = fs.readFileSync(tempImagePath);
+                    const params = {
+                        Bucket: bucketName,
+                        Key: imagePath,
+                        Body: fileContent,
+                        ContentType: 'image/jpeg'
+                    };
+
+                   
+
+                    s3.upload(params, (err, data) => {
+                        if (err) {
+                            console.error('Upload Error:', err); 
+                            reject(err);
+                        } else {
+                         
+                            
+                            fs.unlinkSync(tempFilePath);
+                            fs.unlinkSync(tempImagePath);
+                            resolve(data.Location);
+                        }
+                    });
+                })
+                .on('error', (err) => {
+                    console.error('FFmpeg Error:', err); 
+                    reject(err);
+                });
         });
-      }, function (err) {
-        console.log('Error: ' + err);
-      });
-    } catch (e) {
-      console.log(e.code);
-      console.log(e.msg);
-    }
-  }
 
-  module.exports = extractImage
+        videoStream.on('error', (err) => {
+            console.error('Video Stream Error:', err); 
+            reject(err);
+        });
+    });
+};
+
+module.exports = extractImage;

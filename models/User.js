@@ -20,7 +20,7 @@ let userSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
-        default: 'avatar\\defaultAvatar.jpg'
+        default: 'https://sheeshtv.s3.eu-north-1.amazonaws.com/avatar/avatarDefault.png'
     },
     description: {
         type: String,

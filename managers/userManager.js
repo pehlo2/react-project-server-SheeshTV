@@ -74,7 +74,6 @@ exports.getAllUsers = async (userId, searchQuery) => {
     }
 
     const users = await User.find(filter)
-console.log(users);
     return users
 }
 
