@@ -1,19 +1,15 @@
-
-const multer = require('multer');
-const multerS3 = require('multer-s3');
-const aws = require('aws-sdk');
-const path = require('path');
 require('dotenv').config();
+
+console.log('Bucket Name:', process.env.BUCKET_NAME);
+console.log('Bucket Region:', process.env.BUCKET_REGION);
+console.log('Access Key ID:', process.env.ACCESS_KEY);
+console.log('Secret Access Key:', process.env.SECRET_ACCESS_KEY);
 
 const bucketName = process.env.BUCKET_NAME;
 const bucketRegion = process.env.BUCKET_REGION;
 const accessKeyId = process.env.ACCESS_KEY;
 const secretAccessKey = process.env.SECRET_ACCESS_KEY;
 
-console.log('Bucket Name:', bucketName);
-console.log('Bucket Region:', bucketRegion);
-console.log('Access Key ID:', accessKeyId);
-console.log('Secret Access Key:', secretAccessKey);
 aws.config.update({
     accessKeyId: accessKeyId,
     secretAccessKey: secretAccessKey,
@@ -28,15 +24,14 @@ const storage = multerS3({
     bucket: bucketName,
     acl: 'public-read',
     key: function (req, file, cb) {
-        console.log('Uploading to bucket:', bucketName);
         cb(null, `videos/${Date.now()}_${path.basename(file.originalname)}`);
     }
 });
 
-const upload = multer({ 
+const upload = multer({
     storage: storage,
     limits: {
-        fileSize: 20000000 
+        fileSize: 20000000
     }
 });
 
