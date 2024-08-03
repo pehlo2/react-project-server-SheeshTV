@@ -31,6 +31,7 @@ router.post('/upload', upload.single('video'), async (req, res) => {
     const videoPath = req.file.location;
     const videoKey = req.file.key;
    
+console.log('21421');
 
 
     const imagePath = videoKey.replace(/\.[^/.]+$/, ".jpg");
