@@ -19,7 +19,7 @@ aws.config.update({
 });
 
 const s3 = new aws.S3();
-
+console.log(s3);
 
 const storage = multerS3({
     s3: s3,
