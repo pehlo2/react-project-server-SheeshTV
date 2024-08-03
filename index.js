@@ -29,7 +29,7 @@ const corsOptions = {
   optionsSuccessStatus: 200,
   credentials: true,
 };
-
+console.log(process.env);
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'https://soft-uni-project-sheesh-tv.vercel.app');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');

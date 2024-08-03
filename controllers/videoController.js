@@ -24,7 +24,7 @@ router.post('/upload', upload.single('video'), async (req, res) => {
       owner: req.body.userId,
       description: req.body.description,
       gameChoice: req.body.gameChoice,
-      videoUrl: req.file.path,
+      videoUrl: req.file.location,
       thumbnail: imagePath
     });
     const savedVideo = await video.save();
