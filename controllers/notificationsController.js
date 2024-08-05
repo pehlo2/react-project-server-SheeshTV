@@ -47,6 +47,8 @@ router.delete('/:notificationId/delete', async (req, res) => {
 
 router.delete('/:userId/deleteAll', async (req, res) => {
   const { userId } = req.params;
+  console.log(userId);
+  
   try {
       const result = await notificationManager.deleteAllNotifications(userId);
       res.status(200).send(result);

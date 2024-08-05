@@ -5,7 +5,7 @@ let userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
-        minLength: [6, 'Username should be at least 10 characters']
+        minLength: [5, 'Username should be at least 5 characters']
     },
     email: {
         type: String,
@@ -20,7 +20,7 @@ let userSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
-        default: 'https://sheeshtv.s3.eu-north-1.amazonaws.com/avatar/avatarDefault.png'
+        default: 'https://sheeshtv.s3.eu-north-1.amazonaws.com/avatar/defaultAvatar.jpg'
     },
     description: {
         type: String,
