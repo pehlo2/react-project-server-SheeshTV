@@ -11,10 +11,6 @@ const User = require('../models/User.js');
 
 
 const authCookieName = 'auth-cookie'
-const fs = require('fs').promises
-
-
-
 
 
 router.get('/', async (req, res) => {
@@ -150,8 +146,6 @@ router.post('/follow', async (req, res) => {
 
 
 
-
-
         res.json(userToFollow)
 
 
@@ -266,8 +260,6 @@ router.get('/:profileId/following', async (req, res) => {
     try {
         const profileId = req.params.profileId
         const followers = await User.find({ followers: profileId });
-
-
 
         res.json(followers);
     } catch (err) {
