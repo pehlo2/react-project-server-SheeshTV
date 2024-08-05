@@ -12,10 +12,10 @@ function initializeSocket(server) {
   });
 
   io.on('connection', (socket) => {
-    console.log('New client connected');
+   
 
     socket.on('register', async (userId) => {
-      console.log(`User registered: ${userId}`);
+     
       const user = await User.findById(userId);
       if (user) {
         user.socketId = socket.id;
@@ -24,7 +24,7 @@ function initializeSocket(server) {
     });
 
     socket.on('disconnect', async () => {
-      console.log('Client disconnected');
+      
       const user = await User.findOne({ socketId: socket.id });
       if (user) {
         user.socketId = null;

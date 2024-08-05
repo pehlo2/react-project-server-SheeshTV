@@ -117,7 +117,7 @@ router.put('/:commentId', async (req, res) => {
 
 router.delete('/:commentId', async (req, res) => {
 
-  console.log(req.params.commentId);
+
   
   try {
     await commentManager.deleteComment(req.params.commentId)

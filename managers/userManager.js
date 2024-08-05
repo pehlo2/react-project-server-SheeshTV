@@ -64,7 +64,7 @@ exports.profileInfo = async (id) => {
 
 
 exports.getAllUsers = async (userId, searchQuery) => {
- console.log(userId);
+
     const filter = {
         _id: { $ne: userId },
     };

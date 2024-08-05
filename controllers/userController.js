@@ -293,8 +293,7 @@ router.get('/:profileId/followers', async (req, res) => {
 const deleteS3Objects = async (filePath) => {
 
     const key = `avatar/${filePath.split('/').pop()}`;
-    console.log(filePath);
-    console.log(key);
+  
     
     
     return s3.deleteObject({
