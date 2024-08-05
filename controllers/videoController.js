@@ -163,6 +163,8 @@ router.post('/:videoId/like', async (req, res) => {
   console.log(videoId);
   console.log(authorName);
   console.log(userId);
+  console.log('412412421');
+  
   
   try {
 
