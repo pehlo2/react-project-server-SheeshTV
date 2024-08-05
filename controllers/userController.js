@@ -24,7 +24,7 @@ router.get('/', async (req, res) => {
         const searchQuery = req.query.search
 
         const users = await userManager.getAllUsers(userId, searchQuery)
-
+        users[0].ufawfawfwa= userId
 
         res.json(users)
 
