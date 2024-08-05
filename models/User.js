@@ -31,6 +31,7 @@ let userSchema = new mongoose.Schema({
     followers: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+        required: true,
     }],
     socketId: { type: String }
 }, { timestamps: { createdAt: 'created_at' } });

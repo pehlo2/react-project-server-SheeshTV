@@ -16,16 +16,12 @@ const authCookieName = 'auth-cookie'
 router.get('/', async (req, res) => {
 
 
-
-
     try {
         const userId = req.user?._id
 
         const searchQuery = req.query.search
 
         const users = await userManager.getAllUsers(userId, searchQuery)
-        users[0].ufawfawfwa= userId
-
         res.json(users)
 
     } catch (err) {
