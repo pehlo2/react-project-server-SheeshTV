@@ -160,7 +160,10 @@ router.post('/:videoId/like', async (req, res) => {
   const videoId = req.params.videoId
   const authorName = req.user?.username
   const userId = req.user?._id
- 
+  console.log(videoId);
+  console.log(authorName);
+  console.log(userId);
+  
   try {
 
     const video = await videoManager.getOne(videoId).populate('owner');
