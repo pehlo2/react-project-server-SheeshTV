@@ -30,8 +30,7 @@ let userSchema = new mongoose.Schema({
     },
     followers: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', 
-        unique: true,
+        ref: 'User',
     }],
     socketId: { type: String }
 }, { timestamps: { createdAt: 'created_at' } });
