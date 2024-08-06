@@ -226,7 +226,7 @@ router.put('/:userId/update',isAuth, uploadAvatar.single('avatar'), async (req, 
 
         userDataToUpdate.avatar = req.file.location
 
-        if (!avatarToDeleteUrl?.includes('avatarDefault')) {
+        if (!avatarToDeleteUrl?.includes('defaultAvatar')) {
             
             await deleteS3Objects(avatarToDeleteUrl);
 
