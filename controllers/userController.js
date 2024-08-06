@@ -188,6 +188,7 @@ router.post('/unfollow', async (req, res) => {
 
 
 const AWS = require('aws-sdk');
+const { isAuth } = require('../middlewares/authMiddleware.js');
 const s3 = new AWS.S3();
 const bucketName = process.env.BUCKET_NAME
 const bucketRegion = process.env.BUCKET_REGION
@@ -204,13 +205,15 @@ AWS.config.update({
 
 
 
-router.put('/:userId/update', uploadAvatar.single('avatar'), async (req, res) => {
+router.put('/:userId/update',isAuth, uploadAvatar.single('avatar'), async (req, res) => {
 
 
     let avatarToDeleteUrl = req.body.avatarToDelete
 
 
     const userId = req.user?._id
+    
+    
     const userDataToUpdate = {
         email: req.body.email,
         description: req.body.description,
