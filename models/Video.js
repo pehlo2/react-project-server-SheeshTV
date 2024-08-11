@@ -19,7 +19,7 @@ const videoSchema = new mongoose.Schema({
     },
     gameChoice: {
         type: String,
-        enum: ['Valorant', 'Counter Strike 2', 'Fortnite', 'League of Legends', 'Minecraft', 'Apex Legends', 'GTA V', 'World Of Warcraft'],
+        enum: ['Valorant', 'Counter Strike 2', 'Fortnite', 'League of Legends', 'Minecraft', 'Apex Legends', 'GTA V', 'World Of Warcraft','Overwatch'],
         required: true
     },
     likes: [{

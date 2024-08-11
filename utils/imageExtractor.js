@@ -12,8 +12,8 @@ const extractImage = (videoUrl, imagePath) => {
         const tempImagePath = path.join(__dirname, 'temp-image.jpg');
 
      
-        const videoKey = new URL(videoUrl).pathname.substring(1); 
-     
+        const videoKey = decodeURIComponent(new URL(videoUrl).pathname.substring(1)); 
+        console.log('Video Key:', videoKey);
 
     
         const videoStream = fs.createWriteStream(tempFilePath);

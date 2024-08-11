@@ -27,10 +27,20 @@ AWS.config.update({
 
 router.post('/upload', upload.single('video'), async (req, res) => {
   try {
+    if (err instanceof multer.MulterError) {
 
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(413).json({ message: 'File too large. Maximum size allowed is 20MB.' });
+      }
+
+      return res.status(400).json({ message: err.message });
+    } else if (err) {
+
+      return res.status(500).json({ message: 'An unknown error occurred during the upload.' });
+    }
     const videoPath = req.file.location;
     const videoKey = req.file.key;
-   
+
 
     const imagePath = videoKey.replace(/\.[^/.]+$/, ".jpg");
     const thumbnailUrl = await extractImage(videoPath, imagePath);
@@ -42,14 +52,15 @@ router.post('/upload', upload.single('video'), async (req, res) => {
       videoUrl: req.file.location,
       thumbnail: thumbnailUrl
     });
+    console.log(video);
 
 
 
     const savedVideo = await video.save();
-   
     res.status(200).json(savedVideo);
   } catch (err) {
-   
+    console.log(err);
+
     res.status(400).json({ message: err.message });
   }
 });
@@ -72,7 +83,7 @@ router.get('/', async (req, res) => {
   try {
     videos = await videoManager.getAll(currentUserId, gameChoice, searchQuery, page, limit).populate('owner')
 
-   
+
     res.json(videos)
 
   } catch (err) {
@@ -103,7 +114,7 @@ router.get('/user-videos', async (req, res) => {
 
 
     const videos = await videoManager.getAllByOwnerId(profileId, limit, page).populate('owner')
-  
+
 
     res.json(videos)
   } catch (err) {
@@ -142,7 +153,7 @@ router.get('/:videoId', async (req, res) => {
     video.viewCount += 1;
     await video.save();
 
-  
+
     res.json(video)
 
   } catch (err) {
@@ -160,12 +171,9 @@ router.post('/:videoId/like', async (req, res) => {
   const videoId = req.params.videoId
   const authorName = req.user?.username
   const userId = req.user?._id
-  console.log(videoId);
-  console.log(authorName);
-  console.log(userId);
-  console.log('412412421');
-  
-  
+
+
+
   try {
 
     const video = await videoManager.getOne(videoId).populate('owner');
@@ -243,7 +251,7 @@ router.delete('/:videoId/delete', async (req, res) => {
 
 
     const deleteS3Objects = async (filePath) => {
-    
+
       const key = `videos/${filePath.split('/').pop()}`;
 
       return s3.deleteObject({

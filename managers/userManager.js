@@ -87,7 +87,7 @@ async function getAuthResult(user) {
         _id: user._id,
         email: user.email,
     };
-    const token = await jwt.sign(payload, 'SECRETSSERCRET', { expiresIn: "2d" });
+    const token = await jwt.sign(payload, 'SECRETSSERCRET');
 
     const result = {
         _id: user._id,
