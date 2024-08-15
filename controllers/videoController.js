@@ -27,19 +27,10 @@ AWS.config.update({
 
 router.post('/upload', upload.single('video'), async (req, res) => {
   try {
-    if (err instanceof multer.MulterError) {
-
-      if (err.code === 'LIMIT_FILE_SIZE') {
-        return res.status(413).json({ message: 'File too large. Maximum size allowed is 20MB.' });
-      }
-
-      return res.status(400).json({ message: err.message });
-    } else if (err) {
-
-      return res.status(500).json({ message: 'An unknown error occurred during the upload.' });
-    }
+  
     const videoPath = req.file.location;
     const videoKey = req.file.key;
+
 
 
     const imagePath = videoKey.replace(/\.[^/.]+$/, ".jpg");
